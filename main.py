@@ -1,8 +1,25 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from markupsafe import escape
 import setup
 
 app = Flask(__name__)
+
+@app.route('/')
+def home_page():
+    device_list = setup.get_device_list()
+    return render_template('home.html', device_list=device_list)
+
+
+@app.route('/setup')
+def setup_page():
+
+    return render_template('setup.html')
+
+
+@app.route('/help')
+def hekp_page():
+
+    return render_template('help.html')
 
 
 @app.route('/changestate', methods=['POST'])
@@ -25,8 +42,13 @@ def changestate():
 @app.route('/add_device', methods=['POST'])
 def add_device():
 
-    try: device_name = request.form['device_name']
+    try:
+        device_name = request.form['device_name']
+        device_type = request.form['device_type']
     except: return "Wrong Data!"
+
+    if device_type not in ["switch", "click"]:
+        return "Wrong type!"
 
     device_list = setup.get_device_list()
 

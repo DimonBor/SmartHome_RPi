@@ -14,10 +14,10 @@ def get_device_list():
     return device_list
 
 
-def create_device(device_name):
+def create_device(device_name, device_type):
 
     device_list = get_device_list()
-    new_device = [device_name, "off"]
+    new_device = [device_name, "off", device_type]
     device_list.append(new_device)
 
     with open('devices', 'w') as devices:

@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+
+{% block home_link %}<a href="/" class="nav-link active" aria-current="page">{% endblock %}
+{% block setup_link %}<a href="/setup" class="nav-link text-white">{% endblock %}
+{% block help_link %}<a href="/help" class="nav-link text-white">{% endblock %}
+
+{% block main_page %}
+<div class="mx-4 my-4">
+  <h3>Устройства</h3>
+  <hr>
+  {% for device in device_list %}
+  <div class="content">
+  <div class= "mx-2 my-1"><h5>{{device_list.index(device)+1}}. {{device[0]}}</h5></div>
+  <div class="my-1"><center>
+    {% if device[2] == "switch" %}
+    <button type="button" class="btn btn-sm btn-secondary">
+    {{device[1]}}
+  </button></center></div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
