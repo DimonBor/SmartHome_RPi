@@ -18,7 +18,7 @@ def get_device_list():
 def create_device(device_name, device_type, gpio):
 
     device_list = get_device_list()
-    new_device = [device_name, "off", device_type, gpio]
+    new_device = [device_name, "off", device_type, gpio, len(device_list)+1]
     device_list.append(new_device)
 
     with open('devices', 'w') as devices:
@@ -59,6 +59,22 @@ def turn_off(device):
 
     update_gpio()
 
+def edit_device(device_id, device_name, device_type, gpio):
+
+    device_list = get_device_list()
+
+    for device in device_list:
+        if int(device_id) == device[4]:
+            index = device_list.index(device)
+            device_list[index][0] = device_name
+            device_list[index][2] = device_type
+            device_list[index][3] = gpio
+
+    with open('devices', 'w') as devices:
+        json.dump(device_list, devices)
+
+    update_gpio()
+
 def update_gpio():
 
     device_list = get_device_list()
@@ -66,6 +82,7 @@ def update_gpio():
     GPIO.setmode(GPIO.BCM)
 
     for device in device_list:
-        GPIO.setup(int(device[3]), GPIO.OUT, initial=GPIO.LOW)
-        if device[1] == "on": GPIO.output(int(device[3]), 1)
-        else: GPIO.setup(int(device[3]), GPIO.IN)
+        if device[3] != "none":
+            GPIO.setup(int(device[3]), GPIO.OUT, initial=GPIO.LOW)
+            if device[1] == "on": GPIO.output(int(device[3]), 1)
+            else: GPIO.setup(int(device[3]), GPIO.IN)

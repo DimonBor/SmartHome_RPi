@@ -15,8 +15,9 @@ def home_page():
 @app.route('/setup')
 def setup_page():
 
+    device_list = setup.get_device_list()
     setup.update_gpio()
-    return render_template('setup.html')
+    return render_template('setup.html', device_list=device_list)
 
 
 @app.route('/help')
@@ -54,10 +55,12 @@ def add_device():
 
     setup.update_gpio()
 
+    print(request.form)
+
     try:
         device_name = request.form['device_name']
         device_type = request.form['device_type']
-        gpio_number = request.form['gpio']
+        gpio = request.form['gpio']
     except: return "Wrong Data!"
 
     if device_type not in ["switch", "click"]:
@@ -67,13 +70,13 @@ def add_device():
 
     for device in device_list:
         if device[0] == device_name:
-            return "ERROR: Device already exists."
+            device_name += "_new"
     for device in device_list:
-        if device[3] == gpio_number:
+        if device[3] == gpio and gpio != "none":
             return "ERROR: GPIO already used."
 
-    setup.create_device(device_name, device_type, gpio_number)
-    return "OK"
+    setup.create_device(device_name, device_type, gpio)
+    return redirect('/setup')
 
 
 @app.route('/remove_device', methods=['POST'])
@@ -90,6 +93,41 @@ def remove_device():
         if device[0] == device_name:
             setup.delete_device(device_name)
             return "OK"
+
+    return "ERROR: Not found"
+
+
+@app.route('/edit_device', methods=['POST'])
+def edit_device():
+
+    print(request.form)
+
+    try:
+        device_name = request.form['device_name']
+        device_type = request.form['radios']
+        gpio = request.form['gpio']
+        button_sel = request.form['button_sel']
+        device_id = request.form['device_id']
+    except: return "Wrong Data!"
+
+    if button_sel == "Удалить":
+        setup.delete_device(device_name)
+        return redirect('/setup')
+
+    device_list = setup.get_device_list()
+
+    for device in device_list:
+        if device[0] == device_name:
+            return "ERROR: Name already used."
+
+    for device in device_list:
+        if device[3] == gpio and gpio != "none":
+            return "ERROR: GPIO already used."
+
+    for device in device_list:
+        if device[4] == int(device_id):
+            setup.edit_device(device_id, device_name, device_type, gpio)
+            return redirect('/')
 
     return "ERROR: Not found"
 

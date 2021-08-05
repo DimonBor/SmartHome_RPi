@@ -5,43 +5,60 @@
 {% block help_link %}<a href="/help" class="nav-link text-white">{% endblock %}
 
 {% block main_page %}
-<div class="container mx-1 my-1">
-<div class="head_container mx-4 my-4">
-  <h3>Устройства</h3>
-  <hr>
-</div>
-<div class="devices_container mx-4 my-4">
-{% for device in device_list %}
-<div class="device">
-<div class= "mx-2 my-1"><center><h5>{{device[0]}}</h5></center></div>
-<div class= "mx-2 my-1"><center><h6><i>GPIO pin: {{device[3]}}</i></h6></center></div>
-{% if device[2] == "switch" %}
-  <div class= "mx-2 my-1"><center><h6><i>Status: {{device[1]}}</i></h6></center></div>
-{% endif %}
-<div class="my-2"><center>
-  {% if device[2] == "switch" %}
-    {% if device[1] == "off" %}
-      <form action="/changestate" method="post">
-        <input style="display: none;" name="device_name" value="{{device[0]}}">
-        <input type="submit"  value="On" class="btn btn-sm btn-primary">
-        <button disabled type="button" class="btn btn-sm btn-secondary">Off</button>
-      </form>
-    {% else %}
-      <form action="/changestate" method="post">
-        <button disabled type="button" class="btn btn-sm btn-secondary">On</button>
-        <input style="display: none;" name="device_name" value="{{device[0]}}">
-        <input type="submit" value="Off" class="btn btn-sm btn-primary">
-      </form>
-    {% endif %}
-  {% else %}
-    <form action="/changestate" method="post">
-      <input style="display: none;" name="device_name" value="{{device[0]}}">
-      <input type="submit" value="Click" class="btn btn-sm btn-primary">
-    </form>
-  {% endif %}
-  </center></div>
-</div>
-{% endfor %}
-</div>
+<div class="overflow-auto container mx-1 my-1">
+  <div class="head_container mx-4 my-4">
+    <h3>Устройства</h3>
+    <hr>
+  </div>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-rows: repeat({{device_list|length / 2}}, 1fr);
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 10px;
+      }
+  </style>
+  <div class="grid devices_container mx-1 my-1">
+    {% for device in device_list %}
+      <div class="device">
+        <form action="/changestate" method="post">
+          <div class= "mx-2 my-1"><center><h5>{{device[0]}}</h5></center></div>
+          <div class= "mx-2 my-1"><center><h6><i>GPIO pin: {{device[3]}}
+          {% if device[2] == "switch" %}
+          | Status: {{device[1]}}</i></h6></center></div>
+          {% endif %}
+          <div class="my-2"><center>
+            {% if device[2] == "switch" %}
+              {% if device[1] == "off" %}
+                <input style="display: none;" name="device_name" value="{{device[0]}}">
+                {% if device[3] == "none" %}
+                  <input disabled type="submit" style="height: 58px; width: 100px;" value="On" class="btn btn-sm btn-primary">
+                {% else %}
+                  <input type="submit" style="height: 58px; width: 100px;" value="On" class="btn btn-sm btn-primary">
+                {% endif %}
+                <button disabled type="button" style="height: 58px; width: 100px;" class="btn btn-sm btn-secondary">Off</button>
+              {% else %}
+                <button disabled type="button" style="height: 58px; width: 100px;" class="btn btn-sm btn-secondary">On</button>
+                <input style="display: none;" name="device_name" value="{{device[0]}}">
+                {% if device[3] == "none" %}
+                  <input disabled type="submit" style="height: 58px; width: 100px;" value="Off" class="btn btn-sm btn-primary">
+                {% else %}
+                  <input type="submit" style="height: 58px; width: 100px;" value="Off" class="btn btn-sm btn-primary">
+                {% endif %}
+              {% endif %}
+            {% else %}
+              <input style="display: none;" name="device_name" value="{{device[0]}}">
+              {% if device[3] == "none" %}
+                <input disabled type="submit" style="height: 58px; width: 100px;" value="Click" class="btn btn-primary">
+              {% else %}
+                <input type="submit" style="height: 58px; width: 100px;" value="Click" class="btn btn-primary">
+              {% endif %}
+            {% endif %}
+            </center>
+          </div>
+        </form>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

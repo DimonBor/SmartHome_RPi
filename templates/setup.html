@@ -5,5 +5,62 @@
 {% block help_link %}<a href="/help" class="nav-link text-white">{% endblock %}
 
 {% block main_page %}
-<h1>Главная старница</h1>
+<div class="overflow-auto container mx-1 my-1">
+  <div class="head_container mx-4 my-4">
+    <h3>Изменение устройств</h3>
+    <hr>
+  </div>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-rows: repeat({{device_list|length / 2}}, 1fr);
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 10px;
+    }
+  </style>
+  <div class="grid devices_container mx-1 my-1">
+    {% for device in device_list %}
+      <form action="/edit_device" method="post">
+        <div class="device">
+          <div class= "mx-2 my-1"><center>
+              <input name="device_name" value="{{device[0]}}">
+            </center>
+          </div>
+          <input style="display: none;" name="device_id" value="{{device[4]}}">
+          <div class= "mx-2 my-1">
+            <center><h6><i>GPIO pin:</i></h6><input style="max-width: 22%;"name="gpio" value="{{device[3]}}"></center>
+          </div>
+          <div class="my-3"><center>
+            <fieldset class="mb-1" style="max-width: 35%;">
+              <div class="form-check">
+                {% if device[2] == "switch" %}
+                  <input type="radio" name="radios" class="form-check-input" id="exampleRadio1" value="switch" checked>
+                {% else %}
+                  <input type="radio" name="radios" class="form-check-input" id="exampleRadio1"value="switch">
+                {% endif %}
+                <label class="form-check-label" for="exampleRadio1">Switch</label>
+              </div>
+              <div class="mb-1 form-check">
+                {% if device[2] == "click" %}
+                  <input type="radio" name="radios" class="form-check-input" id="exampleRadio2" value="click" checked>
+                {% else %}
+                  <input type="radio" name="radios" class="form-check-input" id="exampleRadio2" value="click">
+                {% endif %}
+                <label class="form-check-label" for="exampleRadio2">Click</label>
+              </div>
+            </fieldset>
+            <input type="submit" name="button_sel" value="Сохранить" class="btn btn-sm btn-primary">
+            <input type="submit" name="button_sel" value="Удалить" class="btn btn-sm btn-danger">
+          </center>
+          </div>
+        </div>
+      </form>
+    {% endfor %}
+  </div>
+  <form class="my-4" style="align: left" action="/add_device" method="post">
+    <input style="display: none;" name="device_name" value="Новое устройство {{device_list|length}}">
+    <input style="display: none;" name="device_type" value="switch">
+    <input style="display: none;" name="gpio" value="none">
+    <input type="submit" style="width: 220px;" name="button_sel" value="Добавить новое устройство" class="btn btn-sm btn-primary mx-4">
+</div>
 {% endblock %}
