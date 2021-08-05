@@ -1,5 +1,5 @@
 import json
-from gpiozero import LED
+import RPIO
 
 def get_device_list():
 
@@ -62,8 +62,9 @@ def turn_off(device):
 def update_gpio():
 
     device_list = get_device_list()
-
+    RPIO.cleanup()
+    
     for device in device_list:
-        temp_device = LED(device[3])
-        if device[1] == "on": temp_device.on()
-        else: temp_device.off()
+        RPIO.setup(device[3], RPIO.OUT, initial=RPIO.LOW)
+        if device[1] == "on": RPIO.output(device[3], 1)
+        else: RPIO.output(device[3], 0)
