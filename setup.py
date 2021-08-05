@@ -67,6 +67,6 @@ def update_gpio():
     GPIO.cleanup()
 
     for device in device_list:
-        GPIO.setup(device[3], GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(int(device[3]), GPIO.OUT, initial=GPIO.LOW)
         if device[1] == "on": GPIO.output(int(device[3]), 1)
         else: GPIO.output(int(device[3]), 0)
