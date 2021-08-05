@@ -117,7 +117,7 @@ def edit_device():
     device_list = setup.get_device_list()
 
     for device in device_list:
-        if device[0] == device_name:
+        if device[0] == device_name and device[4] != int(device_id):
             return "ERROR: Name already used."
 
     for device in device_list:
