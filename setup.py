@@ -64,8 +64,8 @@ def update_gpio():
     device_list = get_device_list()
     GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
-    
+
     for device in device_list:
         GPIO.setup(int(device[3]), GPIO.OUT, initial=GPIO.LOW)
         if device[1] == "on": GPIO.output(int(device[3]), 1)
-        else: GPIO.output(int(device[3]), 0)
+        else: GPIO.setup(int(device[3]), GPIO.IN)
