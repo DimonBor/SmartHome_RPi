@@ -15,17 +15,29 @@
 <div class="device">
 <div class= "mx-2 my-1"><center><h5>{{device[0]}}</h5></center></div>
 <div class= "mx-2 my-1"><center><h6><i>GPIO pin: {{device[3]}}</i></h6></center></div>
+{% if device[2] == "switch" %}
+  <div class= "mx-2 my-1"><center><h6><i>Status: {{device[1]}}</i></h6></center></div>
+{% endif %}
 <div class="my-2"><center>
   {% if device[2] == "switch" %}
     {% if device[1] == "off" %}
-      <button type="button" class="btn btn-sm btn-primary">On</button>
-      <button disabled type="button" class="btn btn-sm btn-secondary">Off</button>
+      <form action="/changestate" method="post">
+        <input style="display: none;" name="device_name" value="{{device[0]}}">
+        <input type="submit"  value="On" class="btn btn-sm btn-primary">
+        <button disabled type="button" class="btn btn-sm btn-secondary">Off</button>
+      </form>
     {% else %}
-      <button disabled type="button" class="btn btn-sm btn-secondary">On</button>
-      <button type="button" class="btn btn-sm btn-primary">Off</button>
+      <form action="/changestate" method="post">
+        <button disabled type="button" class="btn btn-sm btn-secondary">On</button>
+        <input style="display: none;" name="device_name" value="{{device[0]}}">
+        <input type="submit" value="Off" class="btn btn-sm btn-primary">
+      </form>
     {% endif %}
   {% else %}
-    <button type="button" class="btn btn-sm btn-primary">Click</button>
+    <form action="/changestate" method="post">
+      <input style="display: none;" name="device_name" value="{{device[0]}}">
+      <input type="submit" value="Click" class="btn btn-sm btn-primary">
+    </form>
   {% endif %}
   </center></div>
 </div>

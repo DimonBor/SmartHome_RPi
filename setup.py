@@ -1,4 +1,5 @@
 import json
+from gpiozero import LED
 
 def get_device_list():
 
@@ -23,6 +24,7 @@ def create_device(device_name, device_type, gpio):
     with open('devices', 'w') as devices:
         json.dump(device_list, devices)
 
+    update_gpio()
 
 def delete_device(device_name):
 
@@ -35,6 +37,7 @@ def delete_device(device_name):
     with open('devices', 'w') as devices:
         json.dump(device_list, devices)
 
+    update_gpio()
 
 def turn_on(device):
 
@@ -44,6 +47,7 @@ def turn_on(device):
     with open('devices', 'w') as devices:
         json.dump(device_list, devices)
 
+    update_gpio()
 
 def turn_off(device):
 
@@ -52,3 +56,14 @@ def turn_off(device):
 
     with open('devices', 'w') as devices:
         json.dump(device_list, devices)
+
+    update_gpio()
+
+def update_gpio():
+
+    device_list = get_device_list()
+
+    for device in device_list:
+        temp_device = LED(device[3])
+        if device[1] == "on": temp_device.on()
+        else: temp_device.off()

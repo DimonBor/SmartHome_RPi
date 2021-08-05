@@ -1,24 +1,28 @@
-from flask import Flask, request, render_template
-from markupsafe import escape
+from flask import Flask, request, render_template, redirect
+import time as t
 import setup
 
 app = Flask(__name__)
 
 @app.route('/')
 def home_page():
+
     device_list = setup.get_device_list()
+    setup.update_gpio()
     return render_template('home.html', device_list=device_list)
 
 
 @app.route('/setup')
 def setup_page():
 
+    setup.update_gpio()
     return render_template('setup.html')
 
 
 @app.route('/help')
 def hekp_page():
 
+    setup.update_gpio()
     return render_template('help.html')
 
 
@@ -28,19 +32,27 @@ def changestate():
     try: device_name = request.form['device_name']
     except: return "Wrong Data!"
 
+    setup.update_gpio()
     device_list = setup.get_device_list()
 
     for device in device_list:
         if device[0] == device_name:
-            if device[1] == "off": setup.turn_on(device)
+            if device[2] == "click":
+                setup.turn_on(device)
+                t.sleep(0.5)
+                device[1] = "on"
+                setup.turn_off(device)
+            elif device[1] == "off": setup.turn_on(device)
             else: setup.turn_off(device)
-            return "OK"
+            return redirect('/')
 
     return "ERROR: Device not found"
 
 
 @app.route('/add_device', methods=['POST'])
 def add_device():
+
+    setup.update_gpio()
 
     try:
         device_name = request.form['device_name']
@@ -67,6 +79,8 @@ def add_device():
 @app.route('/remove_device', methods=['POST'])
 def remove_device():
 
+    setup.update_gpio()
+
     try: device_name = request.form['device_name']
     except: return "Wrong Data!"
 
@@ -82,6 +96,9 @@ def remove_device():
 
 @app.route('/get_devices_status', methods=['GET'])
 def get_devices_status():
+
+    setup.update_gpio()
     return str(setup.get_device_list())
+
 
 app.run(host='0.0.0.0', port=5000)
