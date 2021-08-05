@@ -45,6 +45,7 @@ def add_device():
     try:
         device_name = request.form['device_name']
         device_type = request.form['device_type']
+        gpio_number = request.form['gpio']
     except: return "Wrong Data!"
 
     if device_type not in ["switch", "click"]:
@@ -55,8 +56,11 @@ def add_device():
     for device in device_list:
         if device[0] == device_name:
             return "ERROR: Device already exists."
+    for device in device_list:
+        if device[3] == gpio_number:
+            return "ERROR: GPIO already used."
 
-    setup.create_device(device_name)
+    setup.create_device(device_name, device_type, gpio_number)
     return "OK"
 
 
