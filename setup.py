@@ -1,8 +1,6 @@
 import json
 import RPi.GPIO as GPIO
 
-GPIO.setmode(GPIO.BCM)
-
 def get_device_list():
 
     try:
@@ -65,7 +63,8 @@ def update_gpio():
 
     device_list = get_device_list()
     GPIO.cleanup()
-
+    GPIO.setmode(GPIO.BCM)
+    
     for device in device_list:
         GPIO.setup(int(device[3]), GPIO.OUT, initial=GPIO.LOW)
         if device[1] == "on": GPIO.output(int(device[3]), 1)
