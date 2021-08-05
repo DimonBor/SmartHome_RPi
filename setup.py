@@ -68,5 +68,5 @@ def update_gpio():
 
     for device in device_list:
         GPIO.setup(device[3], GPIO.OUT, initial=GPIO.LOW)
-        if device[1] == "on": GPIO.output(device[3], 1)
-        else: GPIO.output(device[3], 0)
+        if device[1] == "on": GPIO.output(int(device[3]), 1)
+        else: GPIO.output(int(device[3]), 0)
