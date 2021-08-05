@@ -26,6 +26,8 @@
           <div class= "mx-2 my-1"><center><h6><i>GPIO pin: {{device[3]}}
           {% if device[2] == "switch" %}
           | Status: {{device[1]}}</i></h6></center></div>
+          {% else %}
+          </i></h6></center></div>
           {% endif %}
           <div class="my-2"><center>
             {% if device[2] == "switch" %}
