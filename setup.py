@@ -1,5 +1,7 @@
 import json
-import RPIO
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
 
 def get_device_list():
 
@@ -62,9 +64,9 @@ def turn_off(device):
 def update_gpio():
 
     device_list = get_device_list()
-    RPIO.cleanup()
-    
+    GPIO.cleanup()
+
     for device in device_list:
-        RPIO.setup(device[3], RPIO.OUT, initial=RPIO.LOW)
-        if device[1] == "on": RPIO.output(device[3], 1)
-        else: RPIO.output(device[3], 0)
+        GPIO.setup(device[3], GPIO.OUT, initial=GPIO.LOW)
+        if device[1] == "on": GPIO.output(device[3], 1)
+        else: GPIO.output(device[3], 0)
