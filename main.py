@@ -121,10 +121,6 @@ def edit_device():
             return "ERROR: Name already used."
 
     for device in device_list:
-        if device[3] == gpio and gpio != "none":
-            return "ERROR: GPIO already used."
-
-    for device in device_list:
         if device[4] == int(device_id):
             setup.edit_device(device_id, device_name, device_type, gpio)
             return redirect('/')
